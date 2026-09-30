@@ -59,6 +59,7 @@ export default function Dashboard() {
   };
   const [frame, setFrame] = useState(0);
   const [playing, setPlaying] = useState(false);
+  const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const [opacity, setOpacity] = useState(0.65);
   const [coverage, setCoverage] = useState(false);
   const [reset, setReset] = useState(0);
@@ -82,9 +83,9 @@ export default function Dashboard() {
     if (!playing || !radar) return;
     const id = setInterval(() => {
       if (!document.hidden) setFrame((f) => (f + 1) % radar.frames.length);
-    }, 6000);
+    }, 6000 / playbackSpeed);
     return () => clearInterval(id);
-  }, [playing, radar]);
+  }, [playing, radar, playbackSpeed]);
   const c = weather?.current;
   const today = new Date(now * 1000).toLocaleDateString("en-CA", {
     timeZone: LOCATION.timezone,
@@ -377,6 +378,18 @@ export default function Dashboard() {
                   </span>
                 </div>
                 <div className="map-options">
+                  <label className="playback-speed">
+                    Velocidade
+                    <select
+                      aria-label="Velocidade da animação do radar"
+                      value={playbackSpeed}
+                      onChange={(e) => setPlaybackSpeed(Number(e.target.value))}
+                    >
+                      <option value={0.5}>0,5× · lenta</option>
+                      <option value={1}>1× · normal</option>
+                      <option value={2}>2× · rápida</option>
+                    </select>
+                  </label>
                   <label>
                     <Layers size={14} /> Opacidade{" "}
                     <input

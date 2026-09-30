@@ -58,7 +58,7 @@ Endpoint: `https://api.rainviewer.com/public/weather-maps.json`. HTTP 200 e `Acc
 
 API pública para uso pessoal/educacional: janela passada de duas horas em passos de aproximadamente dez minutos, zoom nativo máximo 7 e limite divulgado de 100 requisições/IP/minuto. Nowcast futuro e infravermelho de satélite foram descontinuados em 2026. Usa paleta 2 conforme URL documentada, sem prometer escala quantitativa em mm/h.
 
-Tiles de 512 px com `zoomOffset=-1` reduzem requisições; animação muda a cada seis segundos. Zoom de mapa até 12 amplia os tiles disponíveis, sem acrescentar resolução de radar. Cache HTTP é controlado pelo provedor. Movimentos repetidos, controles rápidos ou vários usuários no mesmo IP ainda podem atingir limites externos. Não há download em massa nem prefetch.
+Tiles de 512 px com `zoomOffset=-1` reduzem requisições; animação oferece velocidades 0,5× (12 segundos por quadro), 1× (6 segundos, padrão) e 2× (3 segundos). Zoom de mapa até 12 amplia os tiles disponíveis, sem acrescentar resolução de radar. Cache HTTP é controlado pelo provedor. Movimentos repetidos, controles rápidos ou vários usuários no mesmo IP ainda podem atingir limites externos. Não há download em massa nem prefetch.
 
 Máscara escura identifica ausência de cobertura; a máscara pode não refletir interrupções recentes. Ausência de eco **não comprova ausência de chuva**. Timestamp refere-se ao quadro composto, não necessariamente à hora exata de cada radar. Atribuição RainViewer permanece visível.
 
@@ -120,3 +120,17 @@ Netlify: build `npm run build`, publish `out`, sem functions. Azure Static Web A
 Verificações executadas durante a implementação: TypeScript, build de produção com exportação estática, consulta Open-Meteo no navegador, JSON e tiles RainViewer reais, navegação e inspeção responsiva. Falhas externas não são substituídas por dados demonstrativos. O resultado não é serviço de alertas; consulte os órgãos oficiais para avisos.
 
 As condições e limites das fontes podem mudar. O painel informa falhas e mantém links oficiais; nenhuma hospedagem foi publicada automaticamente.
+
+### Erro `Get Pages site failed` / `Not Found`
+
+Esse erro em `actions/configure-pages` indica que a ação não conseguiu obter a configuração do site Pages. Confira a ativação inicial:
+
+1. Acesse https://github.com/devito-js/Dev-s_Weather/settings/pages com uma conta administradora ou mantenedora do repositório.
+2. Em **Build and deployment → Source**, selecione **GitHub Actions**.
+3. Abra **Actions → Publicar Dev's Weather**, selecione a execução que falhou e clique em **Re-run all jobs**.
+
+Não é necessário gerar outro build local ou enviar `out/`. O workflow já possui `pages: write` e `id-token: write`.
+
+Não acrescente apenas `enablement: true`: conforme https://github.com/actions/configure-pages/blob/v5/action.yml, a ativação automática exige token diferente do `GITHUB_TOKEN`. A ativação manual em Settings evita adicionar credenciais ao projeto.
+
+Se Pages não estiver disponível nas configurações, confira suas permissões, políticas da organização e a elegibilidade do plano para a visibilidade do repositório. No GitHub Free, Pages está disponível para repositórios públicos.
